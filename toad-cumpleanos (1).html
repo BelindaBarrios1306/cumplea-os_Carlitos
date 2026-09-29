@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>¡Feliz Cumpleaños!</title>
+<style>
+  :root{
+    --sky-top:#5fb8e8;
+    --sky-mid:#9adcf0;
+    --sky-bottom:#eaf9ff;
+    --hill-back:#5fbf7a;
+    --hill-front:#3aa65b;
+    --ground:#e8b968;
+    --ground-line:#d9a24f;
+  }
+  *{box-sizing:border-box;}
+  html,body{
+    height:100%;
+    margin:0;
+    overflow:hidden;
+    font-family:'Trebuchet MS', Arial, sans-serif;
+  }
+  body{
+    background:linear-gradient(180deg, var(--sky-top) 0%, var(--sky-mid) 55%, var(--sky-bottom) 100%);
+    position:relative;
+    padding-top:env(safe-area-inset-top,0px);
+    padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+
+  .sun{
+    position:absolute;
+    top:6%;
+    right:8%;
+    width:70px;
+    height:70px;
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 35%, #fff6c9, #ffd54a 70%);
+    box-shadow:0 0 40px 10px rgba(255,213,74,0.5);
+  }
+
+  .cloud{
+    position:absolute;
+    background:#fff;
+    border-radius:50px;
+    opacity:0.95;
+    box-shadow:0 4px 0 rgba(0,0,0,0.03);
+  }
+  .cloud::before, .cloud::after{
+    content:"";
+    position:absolute;
+    background:#fff;
+    border-radius:50%;
+  }
+  .c1{width:90px;height:38px;top:8%;left:8%;animation:drift 30s linear infinite;}
+  .c1::before{width:50px;height:50px;top:-22px;left:12px;}
+  .c1::after{width:38px;height:38px;top:-14px;left:48px;}
+  .c2{width:65px;height:30px;top:16%;left:55%;animation:drift 22s linear infinite;}
+  .c2::before{width:38px;height:38px;top:-16px;left:8px;}
+  .c2::after{width:30px;height:30px;top:-9px;left:36px;}
+  .c3{width:75px;height:32px;top:5%;left:78%;animation:drift 26s linear infinite;}
+  .c3::before{width:40px;height:40px;top:-18px;left:10px;}
+  .c3::after{width:32px;height:32px;top:-11px;left:40px;}
+  @keyframes drift{
+    0%{ transform:translateX(0); }
+    50%{ transform:translateX(20px); }
+    100%{ transform:translateX(0); }
+  }
+
+  .hills{
+    position:absolute;
+    bottom:16%;
+    left:0;
+    width:100%;
+    height:16%;
+  }
+  .hill{
+    position:absolute;
+    bottom:0;
+    width:220px;
+    height:100%;
+    border-radius:50% 50% 0 0 / 100% 100% 0 0;
+    background:var(--hill-back);
+  }
+  .h1{left:-20px;}
+  .h2{left:180px; width:260px; background:var(--hill-back);}
+  .h3{left:420px; width:200px;}
+  .h4{left:640px; width:240px;}
+
+  .ground{
+    position:absolute;
+    bottom:0;
+    left:0;
+    width:100%;
+    height:16%;
+    background:linear-gradient(180deg, var(--ground), #d1a35a);
+    border-top:6px solid #b9853a;
+    box-shadow:inset 0 6px 14px rgba(0,0,0,0.1);
+  }
+  .ground::before{
+    content:"";
+    position:absolute;
+    top:14px;
+    left:0;
+    width:100%;
+    height:8px;
+    background-image:repeating-linear-gradient(90deg, var(--ground-line) 0 18px, transparent 18px 40px);
+    opacity:0.6;
+  }
+
+  .stage{
+    position:relative;
+    width:100%;
+    height:100%;
+  }
+
+  .character{
+    position:absolute;
+    bottom:16.5%;
+    left:-140px;
+    width:100px;
+    height:120px;
+    filter:drop-shadow(0 10px 8px rgba(0,0,0,0.18));
+  }
+
+  .shadow-blob{
+    position:absolute;
+    bottom:-10px;
+    left:50%;
+    width:60px;
+    height:14px;
+    background:rgba(0,0,0,0.22);
+    border-radius:50%;
+    transform:translateX(-50%);
+    filter:blur(2px);
+    animation:shadowPulse 0.55s ease-in-out infinite;
+    animation-play-state:paused;
+  }
+  .character.walking .shadow-blob{ animation-play-state:running; }
+  @keyframes shadowPulse{
+    0%,100%{ transform:translateX(-50%) scale(1); }
+    50%{ transform:translateX(-50%) scale(0.85); }
+  }
+
+  .bob{
+    width:100%;
+    height:100%;
+    position:relative;
+    animation: bounce 0.55s ease-in-out infinite;
+    animation-play-state:paused;
+    transform-origin:bottom center;
+  }
+  .character.walking .bob{ animation-play-state:running; }
+  @keyframes bounce{
+    0%,100%{ transform:translateY(0) rotate(-1.5deg); }
+    50%{ transform:translateY(-11px) rotate(1.5deg); }
+  }
+
+  /* --- cuerpo del personaje (hongo estilo caricatura, diseño propio) --- */
+  .cap{
+    position:absolute;
+    top:0;
+    left:6px;
+    width:88px;
+    height:48px;
+    background:linear-gradient(160deg, #ff6b5e 0%, #e0433c 55%, #c62f28 100%);
+    border-radius:50% 50% 10px 10px / 65% 65% 12px 12px;
+    box-shadow: inset 0 -8px 10px rgba(0,0,0,0.15), inset 0 6px 8px rgba(255,255,255,0.25), 0 3px 6px rgba(0,0,0,0.15);
+  }
+  .cap-rim{
+    position:absolute;
+    bottom:-2px;
+    left:-4px;
+    width:96px;
+    height:14px;
+    background:linear-gradient(180deg,#fff0e0,#ffe0c2);
+    border-radius:50%;
+    box-shadow:0 2px 3px rgba(0,0,0,0.1);
+  }
+  .spot{
+    position:absolute;
+    background:radial-gradient(circle at 35% 30%, #fff, #f3e9dc);
+    border-radius:50%;
+    box-shadow:0 1px 2px rgba(0,0,0,0.15);
+  }
+  .s1{width:18px;height:15px;top:8px;left:12px;}
+  .s2{width:13px;height:12px;top:3px;left:42px;}
+  .s3{width:16px;height:13px;top:11px;left:62px;}
+
+  .face{
+    position:absolute;
+    top:38px;
+    left:20px;
+    width:60px;
+    height:48px;
+    background:linear-gradient(180deg,#ffe8c9,#ffd9a8);
+    border-radius:42% 42% 48% 48%;
+  }
+  .ear{
+    position:absolute;
+    top:44px;
+    width:14px;
+    height:16px;
+    background:#ffd9a8;
+    border-radius:50%;
+  }
+  .earL{left:14px;}
+  .earR{left:72px;}
+  .eye{
+    position:absolute;
+    width:8px;
+    height:11px;
+    background:#2b2118;
+    border-radius:50%;
+    top:16px;
+  }
+  .eye::after{
+    content:"";
+    position:absolute;
+    width:3px;
+    height:3px;
+    background:#fff;
+    border-radius:50%;
+    top:1px;
+    left:1px;
+  }
+  .eyeL{left:16px;}
+  .eyeR{left:36px;}
+  .brow{
+    position:absolute;
+    width:10px;
+    height:3px;
+    background:#c17a3f;
+    border-radius:3px;
+    top:12px;
+  }
+  .browL{left:14px; transform:rotate(-8deg);}
+  .browR{left:36px; transform:rotate(8deg);}
+  .smile{
+    position:absolute;
+    top:28px;
+    left:18px;
+    width:26px;
+    height:14px;
+    border-bottom:3px solid #b5651d;
+    border-radius:0 0 22px 22px;
+  }
+  .cheek{
+    position:absolute;
+    width:9px;
+    height:6px;
+    background:#ff9e8a;
+    border-radius:50%;
+    top:25px;
+    opacity:0.75;
+    filter:blur(0.3px);
+  }
+  .cheekL{left:8px;}
+  .cheekR{left:44px;}
+
+  .vest{
+    position:absolute;
+    top:80px;
+    left:16px;
+    width:68px;
+    height:26px;
+    background:linear-gradient(180deg,#5b8ce8,#3f6fd1 60%,#2e58b8);
+    border-radius:12px 12px 6px 6px;
+    box-shadow:inset 0 3px 4px rgba(255,255,255,0.25), inset 0 -4px 6px rgba(0,0,0,0.15);
+  }
+  .button{
+    position:absolute;
+    width:7px;height:7px;
+    background:radial-gradient(circle at 35% 30%, #fff2b0, #ffd54a);
+    border-radius:50%;
+    top:7px;
+    box-shadow:0 1px 1px rgba(0,0,0,0.2);
+  }
+  .b1{left:28px;}
+  .b2{left:44px;}
+
+  .leg{
+    position:absolute;
+    bottom:-4px;
+    width:17px;
+    height:24px;
+    background:linear-gradient(180deg,#8a5a34,#6b4426);
+    border-radius:6px;
+    box-shadow:inset 0 2px 3px rgba(255,255,255,0.15);
+  }
+  .legL{left:24px; animation:stepL 0.55s linear infinite; animation-play-state:paused;}
+  .legR{left:54px; animation:stepR 0.55s linear infinite; animation-play-state:paused;}
+  .character.walking .legL, .character.walking .legR{ animation-play-state:running; }
+  @keyframes stepL{
+    0%,100%{ transform:translateX(0) rotate(0deg); }
+    50%{ transform:translateX(-7px) rotate(-20deg); }
+  }
+  @keyframes stepR{
+    0%,100%{ transform:translateX(7px) rotate(20deg); }
+    50%{ transform:translateX(0) rotate(0deg); }
+  }
+
+  /* mensaje de cumpleaños */
+  .birthday{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%) scale(0.4);
+    text-align:center;
+    opacity:0;
+    z-index:5;
+  }
+  .birthday h1{
+    font-size:clamp(28px, 7vw, 64px);
+    margin:0;
+    background:linear-gradient(180deg,#ff8a80,#ff4b6e);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    -webkit-text-stroke:2px #7a1f1c;
+    text-shadow:3px 3px 0 #ffd54a;
+    filter:drop-shadow(0 6px 8px rgba(0,0,0,0.2));
+  }
+  .birthday p{
+    margin:8px 0 0;
+    font-size:clamp(14px, 3vw, 22px);
+    color:#223a70;
+    background:rgba(255,255,255,0.6);
+    display:inline-block;
+    padding:4px 14px;
+    border-radius:20px;
+  }
+  .show-birthday{
+    animation: popIn 0.7s cubic-bezier(.34,1.56,.64,1) forwards;
+  }
+  @keyframes popIn{
+    0%{ opacity:0; transform:translate(-50%,-50%) scale(0.3) rotate(-8deg); }
+    70%{ opacity:1; transform:translate(-50%,-50%) scale(1.12) rotate(3deg); }
+    100%{ opacity:1; transform:translate(-50%,-50%) scale(1) rotate(0deg); }
+  }
+
+  .confetti{
+    position:absolute;
+    top:-40px;
+    font-size:28px;
+    line-height:1;
+    opacity:0.95;
+    animation: fall linear forwards;
+    filter:drop-shadow(0 3px 2px rgba(0,0,0,0.2));
+  }
+  @keyframes fall{
+    to{ transform:translateY(110vh) rotate(360deg); opacity:0.5; }
+  }
+
+  .custom-image{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    filter:none;
+  }
+  .final-image{
+    max-width:min(260px, 60vw);
+    max-height:40vh;
+    object-fit:contain;
+    display:block;
+    margin:0 auto 8px;
+    filter:drop-shadow(0 10px 10px rgba(0,0,0,0.25));
+  }
+
+  .controls-bar{
+    position:fixed;
+    bottom:calc(14px + env(safe-area-inset-bottom,0px));
+    left:50%;
+    transform:translateX(-50%);
+    z-index:20;
+    display:flex;
+    gap:10px;
+    align-items:center;
+  }
+  .ctrl-btn{
+    border:none;
+    border-radius:50%;
+    width:56px;
+    height:56px;
+    font-size:22px;
+    background:#fff;
+    color:#223a70;
+    box-shadow:0 4px 10px rgba(0,0,0,0.2);
+    cursor:pointer;
+    user-select:none;
+    -webkit-user-select:none;
+    touch-action:manipulation;
+  }
+  .ctrl-btn:active{
+    transform:scale(0.92);
+  }
+  .surprise-btn{
+    border-radius:28px;
+    width:auto;
+    padding:0 20px;
+    background:linear-gradient(135deg,#ff8a80,#ff4b6e);
+    color:#fff;
+    font-weight:bold;
+    font-size:15px;
+  }
+  .top-surprise-btn{
+    position:fixed;
+    top:calc(14px + env(safe-area-inset-top,0px));
+    left:50%;
+    transform:translateX(-50%);
+    z-index:20;
+    height:44px;
+  }
+
+  .surprise-box{
+    position:absolute;
+    bottom:32%;
+    left:60%;
+    width:56px;
+    height:56px;
+    background:linear-gradient(160deg,#ffd54a,#f5a623);
+    border:4px solid #a9660a;
+    border-radius:8px;
+    box-shadow:inset 0 4px 6px rgba(255,255,255,0.4), inset 0 -6px 8px rgba(0,0,0,0.2), 0 6px 6px rgba(0,0,0,0.2);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:26px;
+    font-weight:bold;
+    color:#a9660a;
+    text-shadow:1px 1px 0 rgba(255,255,255,0.5);
+    animation:boxFloat 1.6s ease-in-out infinite;
+  }
+  @keyframes boxFloat{
+    0%,100%{ transform:translateY(0); }
+    50%{ transform:translateY(-6px); }
+  }
+  .surprise-box.opened{
+    background:linear-gradient(160deg,#c9a06a,#8a6a3f);
+    color:transparent;
+    animation:none;
+    box-shadow:inset 0 6px 10px rgba(0,0,0,0.35);
+  }
+</style>
+</head>
+<body>
+  <audio id="birthdaySound"></audio>
+  <div class="controls-bar">
+    <button class="ctrl-btn" id="btnLeft" title="Mover izquierda">⬅️</button>
+    <button class="ctrl-btn" id="btnJump" title="Saltar">⬆️</button>
+    <button class="ctrl-btn" id="btnRight" title="Mover derecha">➡️</button>
+  </div>
+  <!-- Para insertar tus imágenes/sonido, ve al <script> más abajo y
+       pega tus URLs en IMAGEN_URL, SONIDO_URL, FONDO_URL y CONFETI_URL. -->
+
+  <div class="stage">
+    <div class="sun"></div>
+    <div class="cloud c1"></div>
+    <div class="cloud c2"></div>
+    <div class="cloud c3"></div>
+    <div class="hills">
+      <div class="hill h1"></div>
+      <div class="hill h2"></div>
+      <div class="hill h3"></div>
+      <div class="hill h4"></div>
+    </div>
+    <div class="ground"></div>
+
+    <div class="surprise-box" id="surpriseBox">?</div>
+
+    <div class="character" id="character">
+      <div class="shadow-blob"></div>
+      <div class="bob">
+        <div class="cap">
+          <div class="spot s1"></div>
+          <div class="spot s2"></div>
+          <div class="spot s3"></div>
+          <div class="cap-rim"></div>
+        </div>
+        <div class="ear earL"></div>
+        <div class="ear earR"></div>
+        <div class="face">
+          <div class="brow browL"></div>
+          <div class="brow browR"></div>
+          <div class="eye eyeL"></div>
+          <div class="eye eyeR"></div>
+          <div class="cheek cheekL"></div>
+          <div class="cheek cheekR"></div>
+          <div class="smile"></div>
+        </div>
+        <div class="vest">
+          <div class="button b1"></div>
+          <div class="button b2"></div>
+        </div>
+        <div class="leg legL"></div>
+        <div class="leg legR"></div>
+      </div>
+    </div>
+
+    <div class="birthday" id="birthday">
+      <h1>¡Feliz Cumpleaños!</h1>
+      <p>Eres el niño mas precioso</p>
+      <p>Te amoo</p>
+    </div>
+  </div>
+
+<script>
+  // ============================================================
+  // PEGA AQUÍ TUS PROPIAS URLs (deja "" si no quieres usar alguna)
+  const IMAGEN_URL = "toad.png";   // ej: "https://ejemplo.com/toad.png"  (personaje)
+  const SONIDO_URL = "Sonido-cumpe.mp3";   // ej: "https://ejemplo.com/cumpleanos.mp3"
+ const FONDO_URL = "";   // ej: "https://ejemplo.com/fondo.jpg" (cielo/colinas)
+  const CONFETI_URL = "toad-confetti.png";    // ej: "https://ejemplo.com/mini-toad.png" (imagen que cae en vez de 🍄)
+  // ============================================================
+
+  const character = document.getElementById('character');
+  const birthday = document.getElementById('birthday');
+  const stage = document.querySelector('.stage');
+  const bob = character.querySelector('.bob');
+  const drawnParts = bob.querySelectorAll('.cap, .ear, .face, .vest, .leg');
+  const sound = document.getElementById('birthdaySound');
+
+  let customImageURL = null;
+
+  // Si dejaste una URL en IMAGEN_URL arriba, se usa automáticamente:
+  if(IMAGEN_URL){
+    customImageURL = IMAGEN_URL;
+    drawnParts.forEach(p => p.style.display = 'none');
+    const img = document.createElement('img');
+    img.className = 'custom-image';
+    img.src = IMAGEN_URL;
+    bob.appendChild(img);
+  }
+  // Si dejaste una URL en SONIDO_URL arriba, se usa automáticamente:
+  if(SONIDO_URL){
+    sound.src = SONIDO_URL;
+  }
+  // Si dejaste una URL en FONDO_URL arriba, reemplaza el cielo/colinas dibujados:
+  if(FONDO_URL){
+    document.body.style.background = `center / cover no-repeat url("${FONDO_URL}")`;
+    document.querySelectorAll('.sun, .cloud, .hills, .ground').forEach(el => el.style.display = 'none');
+  }
+
+  const btnLeft = document.getElementById('btnLeft');
+  const btnRight = document.getElementById('btnRight');
+  const btnJump = document.getElementById('btnJump');
+  const btnSurprise = document.getElementById('btnSurprise');
+  const surpriseBox = document.getElementById('surpriseBox');
+
+  let posX = -140;   // posición horizontal (misma que el CSS)
+  let posY = 0;      // altura extra por el salto (0 = en el suelo)
+  let velY = 0;      // velocidad vertical del salto
+  const SPEED = 4;   // px por frame al moverse
+  const GRAVITY = 0.9;
+  const JUMP_FORCE = -22;
+  let moveDir = 0;   // -1 izquierda, 1 derecha, 0 quieto
+  let facing = 1;    // hacia dónde mira (para no voltearlo al saltar quieto)
+  let isJumping = false;
+  let boxOpened = false;
+  let rafId = null;
+
+  function setMoving(isMoving){
+    character.classList.toggle('walking', isMoving && !isJumping);
+  }
+
+  function checkBoxCollision(){
+    if(boxOpened) return;
+    const cRect = character.getBoundingClientRect();
+    const bRect = surpriseBox.getBoundingClientRect();
+    const overlap = !(cRect.right < bRect.left || cRect.left > bRect.right ||
+                       cRect.bottom < bRect.top || cRect.top > bRect.bottom);
+    if(overlap){
+      boxOpened = true;
+      surpriseBox.classList.add('opened');
+      triggerSorpresa();
+    }
+  }
+
+  function loop(){
+    const maxX = stage.clientWidth - 40;
+
+    if(moveDir !== 0){
+      posX += moveDir * SPEED;
+      if(posX < -140) posX = -140;
+      if(posX > maxX) posX = maxX;
+      facing = moveDir;
+    }
+
+    if(isJumping){
+      velY += GRAVITY;
+      posY += velY;
+      if(posY >= 0){
+        posY = 0;
+        velY = 0;
+        isJumping = false;
+        setMoving(moveDir !== 0);
+      }
+    }
+
+    character.style.left = posX + 'px';
+    character.style.transform = `scaleX(${facing}) translateY(${posY}px)`;
+
+    if(isJumping) checkBoxCollision();
+
+    if(moveDir !== 0 || isJumping){
+      rafId = requestAnimationFrame(loop);
+    }
+  }
+
+  function ensureLoop(){
+    cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(loop);
+  }
+
+  function startMove(dir){
+    moveDir = dir;
+    setMoving(true);
+    ensureLoop();
+  }
+  function stopMove(){
+    moveDir = 0;
+    setMoving(false);
+    if(!isJumping) cancelAnimationFrame(rafId);
+  }
+  function doJump(){
+    if(isJumping) return;
+    isJumping = true;
+    velY = JUMP_FORCE;
+    setMoving(false);
+    ensureLoop();
+  }
+
+  ['mousedown','touchstart'].forEach(evt => {
+    btnLeft.addEventListener(evt, (e) => { e.preventDefault(); startMove(-1); });
+    btnRight.addEventListener(evt, (e) => { e.preventDefault(); startMove(1); });
+    btnJump.addEventListener(evt, (e) => { e.preventDefault(); doJump(); });
+  });
+  ['mouseup','mouseleave','touchend','touchcancel'].forEach(evt => {
+    btnLeft.addEventListener(evt, stopMove);
+    btnRight.addEventListener(evt, stopMove);
+  });
+
+  // también con el teclado: flechas para moverse, espacio o flecha arriba para saltar
+  document.addEventListener('keydown', (e) => {
+    if(e.key === 'ArrowLeft') startMove(-1);
+    if(e.key === 'ArrowRight') startMove(1);
+    if(e.key === ' ' || e.key === 'ArrowUp'){ e.preventDefault(); doJump(); }
+  });
+  document.addEventListener('keyup', (e) => {
+    if(e.key === 'ArrowLeft' || e.key === 'ArrowRight') stopMove();
+  });
+
+  function triggerSorpresa(){
+    birthday.classList.add('show-birthday');
+    launchConfetti();
+
+    if(customImageURL){
+      let finalImg = birthday.querySelector('.final-image');
+      if(!finalImg){
+        finalImg = document.createElement('img');
+        finalImg.className = 'final-image';
+        birthday.insertBefore(finalImg, birthday.firstChild);
+      }
+      finalImg.src = customImageURL;
+    }
+
+    if(sound.src){
+      sound.currentTime = 0;
+      sound.play().catch(() => {
+        // el navegador puede bloquear la reproducción automática;
+        // basta con haber tocado la pantalla antes (los botones ya cuentan)
+      });
+    }
+  }
+
+  btnSurprise.addEventListener('click', () => {
+    stopMove();
+    triggerSorpresa();
+  });
+
+  function launchConfetti(){
+    for(let i=0;i<45;i++){
+      const piece = document.createElement('div');
+      piece.className = 'confetti';
+      piece.style.left = Math.random()*100 + '%';
+      const size = 24 + Math.random()*22;
+      const duration = 2.5 + Math.random()*2;
+      const delay = Math.random()*0.8;
+      piece.style.animationDuration = duration + 's';
+      piece.style.animationDelay = delay + 's';
+
+      if(CONFETI_URL){
+        const img = document.createElement('img');
+        img.src = CONFETI_URL;
+        img.style.width = size + 'px';
+        img.style.height = 'auto';
+        img.style.display = 'block';
+        piece.appendChild(img);
+      }else{
+        piece.textContent = '🍄';
+        piece.style.fontSize = size + 'px';
+      }
+      stage.appendChild(piece);
+    }
+  }
+</script>
+</body>
+</html>
